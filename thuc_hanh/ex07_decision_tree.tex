@@ -1,0 +1,67 @@
+\section{Ex7: Decision Tree -- Tính toán Gini Index}
+
+\textbf{Dữ liệu huấn luyện (Training Data):} 20 Instances.
+
+\subsection*{(a) Gini index of the overall dataset}
+\begin{itemize}
+    \item Tổng số mẫu: 20 mẫu.
+    \item Phân lớp: $C_0 = 10$ mẫu, $C_1 = 10$ mẫu.
+\end{itemize}
+Công thức tính Gini tổng quát:
+$$\text{Gini}(S) = 1 - \left(\frac{10}{20}\right)^2 - \left(\frac{10}{20}\right)^2 = 1 - 0.25 - 0.25 = 0.5$$
+\textbf{Kết luận:} $\text{Gini}(S) = 0.5$.
+
+\subsection*{(b) Gini index for Customer ID}
+Vì mỗi ID là duy nhất nên mỗi nút lá chỉ chứa 1 instance, dẫn đến các nút thuần khiết (pure nodes). \\
+\textbf{Kết quả:} $\text{Gini}(\text{CustomerID}) = 0$ (tuy nhiên đây là thuộc tính không có giá trị phân loại thực tế).
+
+\subsection*{(c) Gini index for Gender}
+\begin{itemize}
+    \item \textbf{Nhóm Gender = M (Nam):} IDs: $1, 2, 3, 4, 5, 6, 11, 12, 13, 14 \rightarrow 10$ mẫu. Phân lớp: $C_0 = 6, C_1 = 4$.
+    $$\text{Gini}(M) = 1 - \left(\frac{6}{10}\right)^2 - \left(\frac{4}{10}\right)^2 = 1 - 0.36 - 0.16 = 0.48$$
+    \item \textbf{Nhóm Gender = F (Nữ):} IDs: $7, 8, 9, 10, 15, 16, 17, 18, 19, 20 \rightarrow 10$ mẫu. Phân lớp: $C_0 = 4, C_1 = 6$.
+    $$\text{Gini}(F) = 1 - \left(\frac{4}{10}\right)^2 - \left(\frac{6}{10}\right)^2 = 1 - 0.16 - 0.36 = 0.48$$
+    \item \textbf{Weighted Gini cho Gender:}
+    $$\text{Gini}(\text{Gender}) = \frac{10}{20}(0.48) + \frac{10}{20}(0.48) = 0.48$$
+\end{itemize}
+\textbf{Kết quả:} $\text{Gini}(\text{Gender}) = 0.48$.
+
+\subsection*{(d) Gini index for Car Type (multiway split)}
+Phân nhóm Car Type:
+\begin{itemize}
+    \item \textbf{Family:} IDs $1, 11, 12, 13 \rightarrow C_0 = 1, C_1 = 3$.
+    $$\text{Gini}(\text{Family}) = 1 - \left(\frac{3}{4}\right)^2 - \left(\frac{1}{4}\right)^2 = 0.375$$
+    \item \textbf{Sports:} IDs $2, 3, 4, 5, 6, 7, 8, 9 \rightarrow C_0 = 8, C_1 = 0$ (nút thuần khiết) $\rightarrow \text{Gini}(\text{Sports}) = 0$.
+    \item \textbf{Luxury:} IDs $10, 14, 15, 16, 17, 18, 19, 20 \rightarrow C_0 = 1, C_1 = 7$.
+    $$\text{Gini}(\text{Luxury}) = 1 - \left(\frac{7}{8}\right)^2 - \left(\frac{1}{8}\right)^2 = 0.21875$$
+    \item \textbf{Weighted Gini cho Car Type:}
+    $$\text{Gini}(\text{CarType}) = \frac{4}{20}(0.375) + \frac{8}{20}(0) + \frac{8}{20}(0.21875) = 0.075 + 0 + 0.0875 = 0.1625$$
+\end{itemize}
+\textbf{Kết quả:} $\text{Gini}(\text{CarType}) = 0.1625$.
+
+\subsection*{(e) Gini index for Shirt Size (multiway split)}
+\begin{itemize}
+    \item \textbf{Small:} IDs $1, 7, 8, 15, 16 \rightarrow C_0 = 3, C_1 = 2 \rightarrow \text{Gini} = 0.48$.
+    \item \textbf{Medium:} IDs $2, 3, 9, 13, 17, 18, 19 \rightarrow C_0 = 3, C_1 = 4 \rightarrow \text{Gini} = 0.4898$.
+    \item \textbf{Large:} IDs $4, 10, 11, 20 \rightarrow C_0 = 2, C_1 = 2 \rightarrow \text{Gini} = 0.5$.
+    \item \textbf{Extra Large:} IDs $5, 6, 12, 14 \rightarrow C_0 = 2, C_1 = 2 \rightarrow \text{Gini} = 0.5$.
+    \item \textbf{Weighted Gini cho Shirt Size:}
+    $$\text{Gini}(\text{Shirt}) = \frac{5}{20}(0.48) + \frac{7}{20}(0.4898) + \frac{4}{20}(0.5) + \frac{4}{20}(0.5) = 0.12 + 0.1714 + 0.1 + 0.1 = 0.4914$$
+\end{itemize}
+\textbf{Kết quả:} $\text{Gini}(\text{ShirtSize}) = 0.4914$.
+
+\subsection*{(f) Which attribute is best?}
+So sánh các giá trị Gini đã tính toán:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|c|}
+        \hline
+        \textbf{Attribute} & \textbf{Gini Value} \\
+        \hline
+        Customer ID & 0 (invalid) \\ \hline
+        Gender & 0.48 \\ \hline
+        Car Type & 0.1625 \\ \hline
+        Shirt Size & 0.4914 \\ \hline
+    \end{tabular}
+\end{table}
+\textbf{Kết luận:} Thuộc tính có chỉ số Gini nhỏ nhất là \textbf{Car Type}. Vậy $\text{Best split} = \text{Car Type}$.

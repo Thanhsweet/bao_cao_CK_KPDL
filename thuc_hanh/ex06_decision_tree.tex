@@ -1,0 +1,75 @@
+\section{Ex6: Decision Tree}
+
+\textbf{Dữ liệu tổng quan:}
+\begin{itemize}
+    \item Tổng số mẫu: $9$
+    \item Số $(+) = 4$; Số $(-) = 5$
+\end{itemize}
+
+\subsection*{(a) Entropy của toàn bộ tập $S$}
+Xác suất của các lớp: $p(+) = 4/9$, $p(-) = 5/9$.
+$$H(S) = -\frac{4}{9}\log_2\frac{4}{9} - \frac{5}{9}\log_2\frac{5}{9} = 0.471 + 0.519 = 0.990$$
+\textbf{Kết luận:} $\text{Entropy}(S) = 0.99$.
+
+\subsection*{(b) Information Gain của $a_1$ và $a_2$}
+\begin{enumerate}
+    \item \textbf{$\text{Gain}(a_1)$ -- Chia theo $a_1$:}
+    \begin{itemize}
+        \item $a_1 = T$: $(+, +, -, +) \rightarrow 3(+), 1(-)$.
+        $$H(T) = -\frac{3}{4}\log_2\frac{3}{4} - \frac{1}{4}\log_2\frac{1}{4} = 0.811$$
+        \item $a_1 = F$: $(+, -, -, -, -) \rightarrow 1(+), 4(-)$.
+        $$H(F) = -\frac{1}{5}\log_2\frac{1}{5} - \frac{4}{5}\log_2\frac{4}{5} = 0.722$$
+        \item Entropy sau khi split theo $a_1$:
+        $$H(S \mid a_1) = \frac{4}{9}\cdot 0.811 + \frac{5}{9}\cdot 0.722 = 0.761$$
+        \item Information Gain: $\text{Gain}(a_1) = 0.990 - 0.761 = 0.229$.
+    \end{itemize}
+
+    \item \textbf{$\text{Gain}(a_2)$ -- Chia theo $a_2$:}
+    \begin{itemize}
+        \item $a_2 = T$: $(+, +, -, -, -) \rightarrow 2(+), 3(-) \rightarrow H(T) = 0.971$.
+        \item $a_2 = F$: $(-, +, -, +) \rightarrow 2(+), 2(-) \rightarrow H(F) = 1.0$.
+        \item Entropy sau khi split theo $a_2$:
+        $$H(S \mid a_2) = \frac{5}{9}\cdot 0.971 + \frac{4}{9}\cdot 1.0 = 0.983$$
+        \item Information Gain: $\text{Gain}(a_2) = 0.990 - 0.983 = 0.007$.
+    \end{itemize}
+\end{enumerate}
+
+\textbf{KẾT LUẬN CHO (b):} Best split theo Information Gain $= a_1$.
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|}
+        \hline
+        \textbf{Thuộc tính} & \textbf{Information Gain} \\
+        \hline
+        $a_1$ & 0.229 \\ \hline
+        $a_2$ & 0.007 \\ \hline
+    \end{tabular}
+\end{table}
+
+\subsection*{(f) Best split theo Gini Index cho $a_1$ và $a_2$}
+\begin{itemize}
+    \item \textbf{$\text{GINI}(a_1)$:}
+    \begin{itemize}
+        \item $a_1 = T$ $(3+, 1-)$: $\text{Gini}(T) = 1 - (3/4)^2 - (1/4)^2 = 0.375$.
+        \item $a_1 = F$ $(1+, 4-)$: $\text{Gini}(F) = 1 - (1/5)^2 - (4/5)^2 = 0.32$.
+        \item Weighted Gini: $\text{Gini}(a_1) = \frac{4}{9}\cdot 0.375 + \frac{5}{9}\cdot 0.32 = 0.345$.
+    \end{itemize}
+    \item \textbf{$\text{GINI}(a_2)$:}
+    \begin{itemize}
+        \item $a_2 = T$ $(2+, 3-)$: $\text{Gini}(T) = 1 - (2/5)^2 - (3/5)^2 = 0.48$.
+        \item $a_2 = F$ $(2+, 2-)$: $\text{Gini}(F) = 1 - (2/4)^2 - (2/4)^2 = 0.50$.
+        \item Weighted Gini: $\text{Gini}(a_2) = \frac{5}{9}\cdot 0.48 + \frac{4}{9}\cdot 0.50 = 0.489$.
+    \end{itemize}
+\end{itemize}
+
+\textbf{KẾT LUẬN CHO (f):} Best split theo Gini $= a_1$.
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|}
+        \hline
+        \textbf{Thuộc tính} & \textbf{Gini Index} \\
+        \hline
+        $a_1$ & 0.345 \\ \hline
+        $a_2$ & 0.489 \\ \hline
+    \end{tabular}
+\end{table}

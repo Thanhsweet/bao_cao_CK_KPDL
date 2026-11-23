@@ -1,0 +1,70 @@
+\section{Ex7 (Tiếp theo): Phân cụm bằng thuật toán K-means}
+
+\textbf{Bài toán:} Sử dụng thuật toán K-means và khoảng cách Euclid để phân cụm 8 điểm dữ liệu:
+\begin{itemize}
+    \item $A_1(2,10), A_2(2,5), A_3(8,4), A_4(5,8)$
+    \item $A_5(7,5), A_6(6,4), A_7(1,2), A_8(4,9)$
+\end{itemize}
+Tâm khởi tạo ban đầu: $C_1 = A_1(2,10)$; $C_2 = A_2(2,5)$; $C_3 = A_3(8,4)$.
+
+\subsection*{Iteration 1}
+\textbf{Bước 1 -- Tính khoảng cách từ từng điểm đến 3 tâm:}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \textbf{Điểm} & \textbf{$C_1(2, 10)$} & \textbf{$C_2(2, 5)$} & \textbf{$C_3(8, 4)$} & \textbf{Gần nhất} \\
+        \hline
+        $A_1(2,10)$ & 0 & 5 & 10.0 & $C_1$ \\ \hline
+        $A_2(2,5)$ & 5 & 0 & 6.0 & $C_2$ \\ \hline
+        $A_3(8,4)$ & 10.0 & 6.0 & 0 & $C_3$ \\ \hline
+        $A_4(5,8)$ & $\sqrt{3^2+(-2)^2} = 3.606$ & $\sqrt{3^2+3^2} = 4.243$ & 5 & $C_1$ \\ \hline
+        $A_5(7,5)$ & $\sqrt{5^2+(-5)^2} = 7.071$ & 5 & $\sqrt{(-1)^2+1^2} = 1.414$ & $C_3$ \\ \hline
+        $A_6(6,4)$ & $\sqrt{4^2+(-6)^2} = 7.211$ & $\sqrt{4^2+(-1)^2} = 4.123$ & 2 & $C_3$ \\ \hline
+        $A_7(1,2)$ & $\sqrt{(-1)^2+(-8)^2} = 8.062$ & $\sqrt{(-1)^2+(-3)^2} = 3.162$ & 7.280 & $C_2$ \\ \hline
+        $A_8(4,9)$ & $\sqrt{2^2+(-1)^2} = 2.236$ & $\sqrt{2^2+4^2} = 4.472$ & 6.403 & $C_1$ \\ \hline
+    \end{tabular}
+\end{table}
+
+\textbf{Kết quả phân cụm Iteration 1:}
+\begin{itemize}
+    \item Cluster 1: $A_1, A_4, A_8$
+    \item Cluster 2: $A_2, A_7$
+    \item Cluster 3: $A_3, A_5, A_6$
+\end{itemize}
+
+\textbf{Bước 2 -- Tính tâm cụm mới:}
+\begin{itemize}
+    \item $C_1 = \left(\dfrac{2+5+4}{3}, \dfrac{10+8+9}{3}\right) = (3.67, 9)$
+    \item $C_2 = \left(\dfrac{2+1}{2}, \dfrac{5+2}{2}\right) = (1.5, 3.5)$
+    \item $C_3 = \left(\dfrac{8+7+6}{3}, \dfrac{4+5+4}{3}\right) = (7, 4.33)$
+\end{itemize}
+
+\subsection*{Iteration 2}
+Tính lại khoảng cách từ các điểm đến 3 tâm cụm mới:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \textbf{Điểm} & \textbf{$C_1(3.67, 9)$} & \textbf{$C_2(1.5, 3.5)$} & \textbf{$C_3(7, 4.33)$} & \textbf{Gần nhất} \\
+        \hline
+        $A_1(2,10)$ & 1.95 & 6.52 & 7.56 & $C_1$ \\ \hline
+        $A_2(2,5)$ & 4.33 & 1.58 & 5.04 & $C_2$ \\ \hline
+        $A_3(8,4)$ & 6.61 & 6.52 & 1.05 & $C_3$ \\ \hline
+        $A_4(5,8)$ & 1.66 & 5.70 & 4.18 & $C_1$ \\ \hline
+        $A_5(7,5)$ & 5.21 & 5.70 & 0.67 & $C_3$ \\ \hline
+        $A_6(6,4)$ & 5.52 & 4.53 & 1.05 & $C_3$ \\ \hline
+        $A_7(1,2)$ & 7.49 & 1.58 & 6.44 & $C_2$ \\ \hline
+        $A_8(4,9)$ & 0.33 & 6.04 & 5.55 & $C_1$ \\ \hline
+    \end{tabular}
+\end{table}
+
+\textbf{Kết quả:} Phân cụm không thay đổi so với Iteration 1 $\rightarrow$ Thuật toán hội tụ.
+
+\subsection*{Kết luận cuối cùng}
+3 cụm K-means sau hội tụ:
+\begin{itemize}
+    \item \textbf{Cluster 1:} $A_1(2,10), A_4(5,8), A_8(4,9)$ -- Tâm cụm: $C_1(3.67, 9)$
+    \item \textbf{Cluster 2:} $A_2(2,5), A_7(1,2)$ -- Tâm cụm: $C_2(1.5, 3.5)$
+    \item \textbf{Cluster 3:} $A_3(8,4), A_5(7,5), A_6(6,4)$ -- Tâm cụm: $C_3(7, 4.33)$
+\end{itemize}

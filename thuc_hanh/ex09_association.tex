@@ -1,0 +1,51 @@
+\section{Ex9: Association Rules}
+
+\textbf{Transaction Dataset (10 Transactions):} Total transactions $= 10$.
+
+\subsection*{(a) Compute Support}
+\begin{enumerate}
+    \item \textbf{Support of $\{e\}$:} Các giao dịch chứa $e$:
+    \begin{itemize}
+        \item 0001 $\{a, d, e\}$, 0024 $\{a, b, c, e\}$, 0012 $\{a, b, d, e\}$, 0031 $\{a, c, d, e\}$
+        \item 0015 $\{b, c, e\}$, 0022 $\{b, d, e\}$, 0033 $\{a, d, e\}$, 0038 $\{a, b, e\}$
+    \end{itemize}
+    $\text{Count} = 8 \Rightarrow s(\{e\}) = 8/10 = 0.8$.
+
+    \item \textbf{Support của $\{b, d\}$:} Các giao dịch chứa cả $b$ và $d$:
+    \begin{itemize}
+        \item 0012 $\{a, b, d, e\}$, 0022 $\{b, d, e\}$
+    \end{itemize}
+    $\text{Count} = 2 \Rightarrow s(\{b, d\}) = 2/10 = 0.2$.
+
+    \item \textbf{Support của $\{b, d, e\}$:} Các giao dịch chứa cả $b, d, e$:
+    \begin{itemize}
+        \item 0012 $\{a, b, d, e\}$, 0022 $\{b, d, e\}$
+    \end{itemize}
+    $\text{Count} = 2 \Rightarrow s(\{b, d, e\}) = 2/10 = 0.2$.
+\end{enumerate}
+
+\subsection*{(b) Confidence}
+Định nghĩa: $\text{conf}(X \Rightarrow Y) = \dfrac{s(X \cup Y)}{s(X)}$.
+\begin{itemize}
+    \item \textbf{Rule 1: $\{b, d\} \rightarrow \{e\}$:}
+    $$\text{conf} = \frac{s(\{b, d, e\})}{s(\{b, d\})} = \frac{0.2}{0.2} = 1.0 \ (100\% \text{ confidence})$$
+    \item \textbf{Rule 2: $\{e\} \rightarrow \{b, d\}$:}
+    $$\text{conf} = \frac{s(\{b, d, e\})}{s(\{e\})} = \frac{0.2}{0.8} = 0.25 \ (25\% \text{ confidence})$$
+\end{itemize}
+
+\textbf{Is Confidence a Symmetric Measure?} \\
+\textbf{No.} Vì $\text{conf}(\{b, d\} \rightarrow e) = 1.0$ khác với $\text{conf}(e \rightarrow \{b, d\}) = 0.25$. Confidence thay đổi tùy theo hướng của luật, do đó nó không có tính đối xứng.
+
+\textbf{Final Summary:}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{Itemset} & \textbf{Support} & \textbf{Rule} & \textbf{Confidence} \\
+        \hline
+        $\{e\}$ & 0.8 & $\{b, d\} \rightarrow \{e\}$ & 1.0 \\ \hline
+        $\{b, d\}$ & 0.2 & $\{e\} \rightarrow \{b, d\}$ & 0.25 \\ \hline
+        $\{b, d, e\}$ & 0.2 & & \\ \hline
+    \end{tabular}
+\end{table}
+Confidence is NOT symmetric.

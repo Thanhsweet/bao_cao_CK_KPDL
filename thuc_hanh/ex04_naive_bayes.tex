@@ -1,0 +1,49 @@
+\section{Ex4: Using Naïve Bayes}
+
+\textbf{Dữ liệu bài toán:}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \textbf{Record} & \textbf{A} & \textbf{B} & \textbf{C} & \textbf{Class} \\
+        \hline
+        1 & 0 & 0 & 0 & $+$ \\ \hline
+        2 & 0 & 0 & 1 & $+$ \\ \hline
+        3 & 0 & 1 & 1 & $+$ \\ \hline
+        4 & 1 & 1 & 0 & $-$ \\ \hline
+        5 & 0 & 0 & 1 & $-$ \\ \hline
+        6 & 1 & 1 & 0 & $+$ \\ \hline
+        7 & 0 & 1 & 1 & $-$ \\ \hline
+        8 & 0 & 1 & 1 & $-$ \\ \hline
+        9 & 1 & 1 & 1 & $+$ \\ \hline
+        10 & 0 & 1 & 1 & $-$ \\ \hline
+    \end{tabular}
+\end{table}
+
+\textbf{Số lượng bản ghi:} Số bản ghi $(+) = 5$; Số bản ghi $(-) = 5$.
+
+\subsection*{(a) Tính các xác suất có điều kiện}
+\begin{enumerate}
+    \item $P(A = 0 \mid +) = 3/5 = 0.6$
+    \item $P(A = 0 \mid -) = 2/5 = 0.4$
+    \item $P(B = 1 \mid +) = 2/5 = 0.4$
+    \item $P(B = 1 \mid -) = 1/5 = 0.2$
+    \item $P(C = 0 \mid +) = 1/5 = 0.2$
+    \item $P(C = 0 \mid -) = 0/5 = 0$
+\end{enumerate}
+
+\subsection*{(b) Dự đoán nhãn cho mẫu kiểm tra $(A = 0, B = 1, C = 0)$}
+Công thức Naïve Bayes:
+$$P(\text{Class} \mid X) = P(X \mid \text{Class}) \times P(\text{Class})$$
+Xác suất tiên nghiệm: $P(+) = 0.5$; $P(-) = 0.5$.
+
+Tính toán từng xác suất:
+\begin{enumerate}
+    \item $P(+ \mid A=0, B=1, C=0) = P(A=0 \mid +) \times P(B=1 \mid +) \times P(C=0 \mid +) \times P(+)$
+    $$= 0.6 \times 0.4 \times 0.2 \times 0.5 = 0.024$$
+    \item $P(- \mid A=0, B=1, C=0) = P(A=0 \mid -) \times P(B=1 \mid -) \times P(C=0 \mid -) \times P(-)$
+    $$= 0.4 \times 0.2 \times 0 \times 0.5 = 0$$
+\end{enumerate}
+
+\textbf{So sánh:} $P(+ \mid A=0, B=1, C=0) > P(- \mid A=0, B=1, C=0)$ ($0.024 > 0$). \\
+\textbf{Kết luận:} Mẫu kiểm tra $(A = 0, B = 1, C = 0)$ được dự đoán thuộc lớp \textbf{$(+)$}.

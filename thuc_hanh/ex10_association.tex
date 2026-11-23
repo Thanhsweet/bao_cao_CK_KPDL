@@ -1,0 +1,65 @@
+\section{Ex10: Association Rules -- Chiến lược sinh ứng viên}
+
+\textbf{Đề bài:} Cho tập các 3-itemsets thường xuyên: $\{1,2,3\}, \{1,2,4\}, \{1,2,5\}, \{1,3,4\}, \{1,3,5\}, \{2,3,4\}, \{2,3,5\}, \{3,4,5\}$. Giả sử tập dữ liệu có 5 mặt hàng: $\{1,2,3,4,5\}$.
+
+\subsection*{(a) Liệt kê tất cả các 4-itemsets ứng viên sinh ra bằng chiến lược gộp $F_{k-1} \times F_1$}
+Chiến lược: Mỗi 3-itemset sẽ được gộp với từng item đơn lẻ trong $F_1$ (từ 1 đến 5) nếu tạo ra tập 4 phần tử mới.
+
+Sinh ứng viên từ từng 3-itemset:
+\begin{itemize}
+    \item Từ $\{1,2,3\}$: thêm $4 \rightarrow \{1,2,3,4\}$, thêm $5 \rightarrow \{1,2,3,5\}$
+    \item Từ $\{1,2,4\}$: thêm $3 \rightarrow \{1,2,3,4\}$, thêm $5 \rightarrow \{1,2,4,5\}$
+    \item Từ $\{1,2,5\}$: thêm $3 \rightarrow \{1,2,3,5\}$, thêm $4 \rightarrow \{1,2,4,5\}$
+    \item Từ $\{1,3,4\}$: thêm $2 \rightarrow \{1,2,3,4\}$, thêm $5 \rightarrow \{1,3,4,5\}$
+    \item Từ $\{1,3,5\}$: thêm $2 \rightarrow \{1,2,3,5\}$, thêm $4 \rightarrow \{1,3,4,5\}$
+    \item Từ $\{2,3,4\}$: thêm $1 \rightarrow \{1,2,3,4\}$, thêm $5 \rightarrow \{2,3,4,5\}$
+    \item Từ $\{2,3,5\}$: thêm $1 \rightarrow \{1,2,3,5\}$, thêm $4 \rightarrow \{2,3,4,5\}$
+    \item Từ $\{3,4,5\}$: thêm $1 \rightarrow \{1,3,4,5\}$, thêm $2 \rightarrow \{2,3,4,5\}$
+\end{itemize}
+\textbf{Danh sách các ứng viên 4-itemset duy nhất:} $\{1,2,3,4\}, \{1,2,3,5\}, \{1,2,4,5\}, \{1,3,4,5\}, \{2,3,4,5\}$.
+
+\subsection*{(b) Chiến lược gộp Apriori ($F_{k-1} \times F_{k-1}$)}
+Theo thuật toán Apriori, hai tập $(k-1)$-itemsets chỉ được gộp với nhau nếu chúng có cùng $k-2$ phần tử đầu tiên. \\
+Danh sách các 3-itemsets đã sắp xếp: $123, 124, 125, 134, 135, 234, 235, 345$.
+
+Thực hiện Apriori join:
+\begin{itemize}
+    \item $123 \text{ join } 124 \rightarrow \{1, 2, 3, 4\}$
+    \item $123 \text{ join } 125 \rightarrow \{1, 2, 3, 5\}$
+    \item $124 \text{ join } 125 \rightarrow \{1, 2, 4, 5\}$
+    \item $134 \text{ join } 135 \rightarrow \{1, 3, 4, 5\}$
+    \item $234 \text{ join } 235 \rightarrow \{2, 3, 4, 5\}$
+\end{itemize}
+\textbf{Kết quả ứng viên Apriori:} $\{1, 2, 3, 4\}, \{1, 2, 3, 5\}, \{1, 2, 4, 5\}, \{1, 3, 4, 5\}, \{2, 3, 4, 5\}$. \\
+$\Rightarrow$ \textbf{Đáp án (b):} Trùng với kết quả phần (a).
+
+\subsection*{(c) 4-itemsets sống sót sau bước Apriori Pruning}
+Nguyên tắc: Một 4-itemset chỉ được giữ lại nếu mọi tập con 3 phần tử (3-subset) của nó đều nằm trong danh sách các tập mục thường xuyên đã cho.
+\begin{enumerate}
+    \item $\{1, 2, 3, 4\}$: Các tập con: $123, 124, 134, 234$ (đều phổ biến) $\rightarrow$ \textbf{Giữ lại}.
+    \item $\{1, 2, 3, 5\}$: Các tập con: $123, 125, 135, 235$ (đều phổ biến) $\rightarrow$ \textbf{Giữ lại}.
+    \item $\{1, 2, 4, 5\}$: Các tập con: $124, 125, 145 \ (\times), 245 \ (\times) \rightarrow$ \textbf{Loại}.
+    \item $\{1, 3, 4, 5\}$: Các tập con: $134, 135, 145 \ (\times), 345 \rightarrow$ \textbf{Loại}.
+    \item $\{2, 3, 4, 5\}$: Các tập con: $234, 235, 245 \ (\times), 345 \rightarrow$ \textbf{Loại}.
+\end{enumerate}
+\textbf{Các 4-itemset sống sót cuối cùng:} $\{1, 2, 3, 4\}, \{1, 2, 3, 5\}$. \\
+$\Rightarrow$ \textbf{Đáp án (c):} $\{1, 2, 3, 4\}, \{1, 2, 3, 5\}$.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|l|l|}
+        \hline
+        \textbf{Giai đoạn} & \textbf{Chiến lược} & \textbf{Các tập mục (Itemsets)} \\
+        \hline
+        (a) & Ứng viên $F_{k-1} \times F_1$ & $\{1,2,3,4\}, \{1,2,3,5\}, \{1,2,4,5\}, \{1,3,4,5\}, \{2,3,4,5\}$ \\ \hline
+        (b) & Ứng viên Apriori (Join) & $\{1,2,3,4\}, \{1,2,3,5\}, \{1,2,4,5\}, \{1,3,4,5\}, \{2,3,4,5\}$ \\ \hline
+        (c) & Sau khi Prune (Cắt tỉa) & $\{1,2,3,4\}, \{1,2,3,5\}$ \\ \hline
+    \end{tabular}
+    \caption{Tổng hợp kết quả Ex10}
+\end{table}
+
+\textbf{Nhận xét:}
+\begin{itemize}
+    \item Bước gộp Apriori Join hiệu quả hơn chiến lược $F_{k-1} \times F_1$ thông thường vì nó tận dụng tri thức về thứ tự các mục để giảm thiểu số lượng ứng viên sinh ra ngay từ đầu.
+    \item Bước Pruning là cực kỳ quan trọng; nó loại bỏ các tập mục như $\{1,2,4,5\}, \{1,3,4,5\}$ và $\{2,3,4,5\}$ vì chúng chứa các tập con không phổ biến (ví dụ: $\{1,4,5\}$ hoặc $\{2,4,5\}$), giúp tối ưu hóa hiệu suất tính toán đáng kể.
+\end{itemize}

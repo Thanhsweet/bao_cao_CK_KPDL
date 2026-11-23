@@ -1,0 +1,38 @@
+\section{Ex8: Association Rules}
+
+\textbf{Transaction Dataset Overview:} Total transactions $= 10$.
+
+\subsection*{(a) Compute supports}
+Công thức tính Support:
+$$s(X) = \frac{\text{number of transactions containing } X}{10}$$
+\begin{enumerate}
+    \item \textbf{Support of $\{e\}$:} Các giao dịch chứa $e$: T1, T2, T3, T4, T5, T6, T9, T10. Tổng $= 8 \Rightarrow s(\{e\}) = 8/10 = 0.8$.
+    \item \textbf{Support of $\{b, d\}$:} Các giao dịch chứa cả $b$ và $d$: T3, T6. Tổng $= 2 \Rightarrow s(\{b, d\}) = 2/10 = 0.2$.
+    \item \textbf{Support of $\{b, d, e\}$:} Các giao dịch chứa cả $b, d, e$: T3, T6. Tổng $= 2 \Rightarrow s(\{b, d, e\}) = 2/10 = 0.2$.
+\end{enumerate}
+
+\subsection*{(b) Confidence of Rules}
+Sử dụng định nghĩa:
+$$\text{conf}(X \Rightarrow Y) = \frac{s(X \cup Y)}{s(X)}$$
+\begin{itemize}
+    \item \textbf{Rule 1: $\{b, d\} \rightarrow \{e\}$:}
+    $$\text{conf} = \frac{s(\{b, d, e\})}{s(\{b, d\})} = \frac{0.2}{0.2} = 1.0 \ (100\%)$$
+    \item \textbf{Rule 2: $\{e\} \rightarrow \{b, d\}$:}
+    $$\text{conf} = \frac{s(\{b, d, e\})}{s(\{e\})} = \frac{0.2}{0.8} = 0.25 \ (25\%)$$
+\end{itemize}
+
+\textbf{Is confidence symmetric?} \\
+\textbf{No.} Vì $\text{conf}(\{b, d\} \rightarrow e) = 1.0$ khác với $\text{conf}(e \rightarrow \{b, d\}) = 0.25$. Confidence phụ thuộc vào hướng của luật, do đó nó không có tính đối xứng.
+
+\textbf{Final Results Summary:}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{Itemset} & \textbf{Support} & \textbf{Rule} & \textbf{Confidence} \\
+        \hline
+        $\{e\}$ & 0.8 & $\{b, d\} \rightarrow \{e\}$ & 1.0 \\ \hline
+        $\{b, d\}$ & 0.2 & $\{e\} \rightarrow \{b, d\}$ & 0.25 \\ \hline
+        $\{b, d, e\}$ & 0.2 & & \\ \hline
+    \end{tabular}
+\end{table}
