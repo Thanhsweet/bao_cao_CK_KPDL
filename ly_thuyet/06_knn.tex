@@ -1,0 +1,105 @@
+\section{THUẬT TOÁN K-NN}
+
+\subsection{Khái niệm}
+- Là 1 thuật toán học máy có giám sát thường được sử dụng để phân loại.\\
+- Hoạt động bằng cách tìm các điểm dữ liệu gần nhất “k”(hàng xóm) với 1 đầu vào nhất định và đưa ra dự đoán dựa trên lớp đa số hoặc giá trị trung bình.
+
+\subsection{Các tham số cốt lõi}
+Để vận hành K-NN, ta cần quan tâm hai yếu tố chính:
+\begin{itemize}
+    \item Tham số $k$ :
+    \begin{itemize}
+        \item Đây là tham số quyết định số lượng điểm hàng xóm tham gia vào việc bỏ phiếu.
+        \item Lựa chọn $k$: Nếu $k$ quá nhỏ (ví dụ $k=1$), mô hình rất nhạy cảm với nhiễu. Nếu $k$ quá lớn, ranh giới phân lớp sẽ bị làm mờ, dẫn đến độ chính xác cục bộ giảm.
+    \end{itemize}
+    \item Độ đo khoảng cách :
+    \begin{itemize}
+        \item Để biết đâu là "hàng xóm gần nhất", ta cần thước đo. Phổ biến nhất là Khoảng cách Euclid (Euclidean Distance) - đoạn thẳng nối hai điểm trong không gian hình học.
+        \item Công thức tổng quát giữa hai điểm $P$ và $Q$ trong không gian $n$ chiều:
+        $$d(P,Q) = \sqrt{\sum_{i=1}^{n}(p_i - q_i)^2}$$
+        Trong đó: $p_i$ và $q_i$ lần lượt là giá trị tọa độ (thuộc tính) thứ $i$ của hai điểm dữ liệu.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Quy trình thực hiện thuật toán}
+Quy trình hoạt động của K-NN được chia thành 4 bước tuần tự:
+\begin{itemize}
+    \item \textbf{Bước 1:} Chuẩn bị tập huấn luyện có đặc trưng và nhãn; tách riêng tập kiểm thử.
+    \item \textbf{Bước 2:} Tính khoảng cách từ điểm dữ liệu mới đến tất cả các điểm trong tập huấn luyện.
+    \item \textbf{Bước 3:} Sắp xếp các điểm theo khoảng cách tăng dần và xác định $k$ điểm gần nhất.
+    \item \textbf{Bước 4:} Dự đoán nhãn cho điểm dữ liệu mới dựa trên nhãn của $k$ điểm gần nhất (bỏ phiếu đa số).
+\end{itemize}
+
+\subsection{Mã giả thuật toán}
+\begin{lstlisting}[caption={Mã giả thuật toán KNN}]
+Algorithm KNN_Prediction:
+Input:
+    Du lieu Training (X_train, y_train)
+    Diem du lieu moi can du doan (x_new)
+    Tham so k 
+Begin:
+    1. Khoi tao danh sach luu tru khoang cach (Distances_List)
+    2. Lap qua tung diem du lieu (x_i) trong X_train:
+       a. Tinh khoang cach d = Euclidean(x_i, x_new)
+       b. Them d vao Distances_List
+    3. Sap xep Distances_List theo chieu tang dan.
+    4. Chon ra k diem co khoang cach nho nhat (Top k neighbors).
+    5. Thong ke nhan cua k diem nay.
+    6. Return : Nhan co tan suat xuat hien cao nhat.
+End
+\end{lstlisting}
+
+\subsection{Ví dụ minh họa chi tiết}
+\textbf{Training dataset:}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{ID} & \textbf{Feature 1} & \textbf{Feature 2} & \textbf{Class} \\
+        \hline
+        1 & 3 & 4 & A \\ \hline
+        2 & 1.5 & 5 & A \\ \hline
+        3 & 6 & 8 & A \\ \hline
+        4 & 2.5 & 5 & A \\ \hline
+        5 & 5 & 2.5 & B \\ \hline
+        6 & 5 & 2 & B \\ \hline  
+        7 & 8 & 3 & B \\ \hline
+        8 & 4.5 & 3 & B \\ \hline
+    \end{tabular}
+\end{table}
+
+\textbf{Testing dataset} (Size: 10 instances, 2 features, 2 classes):
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{ID} & \textbf{Feature 1} & \textbf{Feature 2} & \textbf{Class} \\
+        \hline
+        9 & 8 & 1.5 & ? \\ \hline
+        10 & 4.5 & 7 & ? \\ \hline
+    \end{tabular}
+\end{table}
+
+\begin{itemize}
+    \item Tính toán cho Test point 9 $(8, 1.5)$ với $k=3$: Sau khi tính khoảng cách và xếp hạng (Rank), 3 láng giềng gần nhất là các mẫu có ID 7, 6, 5 (đều thuộc Class B). $\rightarrow$ \textbf{Kết quả:} Test point 9 có class B.
+    \item Tính toán cho Test point 10 $(4.5, 7)$ với $k=3$: Sau khi tính khoảng cách và xếp hạng (Rank), 3 láng giềng gần nhất là các mẫu có ID 3, 8, 7 (đều thuộc Class A). $\rightarrow$ Kết quả: Test point 10 có class A.
+\end{itemize}
+
+\subsection{Chương trình cho bài toán minh họa}
+\lstinputlisting[language=Python,caption={Chương trình Python minh họa thuật toán KNN}]{source_code/knn66.py}
+
+\subsection{Ưu/nhược điểm thuật toán K-NN}
+\begin{itemize}
+    \item \textbf{Ưu điểm:}
+    \begin{itemize}
+        \item \textit{Không yêu cầu mô hình phức tạp:} K-NN không yêu cầu xây dựng mô hình trước mà sử dụng dữ liệu trực tiếp để phân loại.
+        \item \textit{Đơn giản và dễ hiểu:} Thuật toán rất đơn giản để triển khai và trực quan, đặc biệt khi dữ liệu ít thuộc tính.
+        \item \textit{Tận dụng tính cục bộ:} Có khả năng mô tả tốt các đặc điểm cục bộ vì dựa trên những điểm gần nhất.
+    \end{itemize}
+    \item \textbf{Nhược điểm:}
+    \begin{itemize}
+        \item \textit{Tốc độ chậm:} Có thể chậm trong giai đoạn phân loại khi dữ liệu lớn vì phải tính khoảng cách đến tất cả các mẫu.
+        \item \textit{Dễ bị ảnh hưởng bởi nhiễu:} Các điểm dữ liệu nhiễu hoặc thuộc tính không liên quan làm giảm độ chính xác.
+        \item \textit{Yêu cầu bộ nhớ lớn:} Cần lưu giữ toàn bộ tập dữ liệu huấn luyện để phân loại.
+    \end{itemize}
+\end{itemize}

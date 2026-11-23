@@ -1,0 +1,133 @@
+\section{THUẬT TOÁN NAIVE BAYES}
+
+\subsection{Khái niệm}
+Naive Bayes là một thuật toán phân lớp dựa trên định lý Bayes với giả định độc lập giữa các thuộc tính. Thuật toán này sử dụng xác suất để đoán nhãn của một mẫu mới dựa trên phân phối xác suất của các nhãn và giá trị của các thuộc tính trong tập huấn luyện.
+
+Định lý Bayes:
+$$P(A\vert{}B) = \frac{P(B\vert{}A)P(A)}{P(B)}$$
+
+Trong đó:
+\begin{itemize}
+    \item $P(A\vert{}B)$: Xác suất của sự kiện $A$ xảy ra khi biết sự kiện $B$ đã xảy ra (gọi là xác suất có điều kiện).
+    \item $P(B\vert{}A)$: Xác suất của sự kiện $B$ xảy ra khi biết sự kiện $A$ đã xảy ra.
+    \item $P(A)$: Xác suất tiên nghiệm của sự kiện $A$ (xác suất xảy ra của $A$ mà không cần biết gì về $B$).
+    \item $P(B)$: Xác suất tiên nghiệm của sự kiện $B$.
+\end{itemize}
+
+\subsection{Quy trình thực hiện}
+\begin{itemize}
+    \item \textbf{Bước 1: Chuẩn bị dữ liệu:} Dữ liệu đầu vào bao gồm các mẫu đã được phân loại, với các thuộc tính $x$ và nhãn $C$.
+    \item \textbf{Bước 2: Tính toán xác suất tiên nghiệm:} Tính xác suất tiên nghiệm $P(c)$ cho mỗi nhãn $c$. Đây là tỉ lệ xuất hiện của từng nhãn trong tập dữ liệu huấn luyện.
+    \item \textbf{Bước 3: Tính xác suất có điều kiện:} Với mỗi nhãn $c$, tính xác suất có điều kiện cho từng thuộc tính $x_i$. Điều này được thực hiện dựa trên tần suất xuất hiện của từng giá trị thuộc tính đối với nhãn đó.
+    \item \textbf{Bước 4: Áp dụng công thức Bayes:} Khi có mẫu mới cần phân loại, áp dụng công thức:
+    $$P(c\vert{}x) = \frac{P(x\vert{}c)P(c)}{P(x)}$$
+    \item \textbf{Bước 5: Dự đoán:} Chọn nhãn có xác suất lớn nhất.
+\end{itemize}
+
+\subsection{Mã giả (Pseudocode)}
+\begin{lstlisting}[caption={Mã giả thuật toán Naïve Bayes}]
+Algorithm Naive_Bayes_Prediction:
+1. Input: Training dataset, Test dataset
+2. For each class C in Training dataset:
+3.     Compute P(C)
+4.     For each attribute x_i in X:
+5.         Compute P(x_i | C)
+6. For each sample X in Test dataset:
+7.     Compute P(C|X) = P(C) * Product(P(x_i | C) for all x_i in X)
+8.     Assign X to the class C with the highest P(C|X)
+9. Output: Predicted labels
+\end{lstlisting}
+
+\subsection{Ví dụ minh họa chi tiết}
+\textbf{Mô tả bài toán:}
+\begin{itemize}
+    \item \textbf{Số lượng mẫu (instances):} Tổng cộng có 14 mẫu huấn luyện (đánh số từ 1 đến 14). Có 1 mẫu kiểm tra (ID 15): $\{\text{Sunny, Cool, High, True}\}$.
+    \item \textbf{Số lượng thuộc tính (features):} Outlook (Sunny, Overcast, Rainy); Temp (Hot, Mild, Cool); Humidity (High, Normal); Windy (True, False).
+    \item \textbf{Số lượng lớp (classes):} Yes (Đồng ý đi chơi); No (Không đi chơi).
+\end{itemize}
+
+\textbf{Bước 1: Tính xác suất tiên nghiệm $P(\text{Yes})$ và $P(\text{No})$}
+\begin{itemize}
+    \item Số mẫu nhãn $\text{Yes} = 9$; Số mẫu nhãn $\text{No} = 5$; Tổng mẫu $= 14$.
+    \item $P(\text{Yes}) = 9/14 \approx 0.643$
+    \item $P(\text{No}) = 5/14 \approx 0.357$
+\end{itemize}
+
+\textbf{Bước 2: Tính xác suất có điều kiện cho từng thuộc tính}
+\begin{itemize}
+    \item $\text{Outlook} = \text{Sunny}$: $P(\text{Sunny}\vert{}\text{Yes}) = 2/9$; $P(\text{Sunny}\vert{}\text{No}) = 3/5$
+    \item $\text{Temp} = \text{Cool}$: $P(\text{Cool}\vert{}\text{Yes}) = 3/9$; $P(\text{Cool}\vert{}\text{No}) = 1/5$
+    \item $\text{Humidity} = \text{High}$: $P(\text{High}\vert{}\text{Yes}) = 3/9$; $P(\text{High}\vert{}\text{No}) = 4/5$
+    \item $\text{Windy} = \text{True}$: $P(\text{True}\vert{}\text{Yes}) = 3/9$; $P(\text{True}\vert{}\text{No}) = 3/5$
+\end{itemize}
+
+\textbf{Bước 3: Áp dụng công thức Bayes để tính xác suất hậu nghiệm}
+\begin{itemize}
+    \item Xác suất cho ``Yes'':
+    $$P(\text{Yes}\vert{}X) = P(\text{Yes}) \cdot P(\text{Sunny}\vert{}\text{Yes}) \cdot P(\text{Cool}\vert{}\text{Yes}) \cdot P(\text{High}\vert{}\text{Yes}) \cdot P(\text{True}\vert{}\text{Yes})$$
+    $$P(\text{Yes}\vert{}X) = \frac{9}{14} \cdot \frac{2}{9} \cdot \frac{3}{9} \cdot \frac{3}{9} \cdot \frac{3}{9} \approx 0.0053$$
+    \item Xác suất cho ``No'':
+    $$P(\text{No}|X) = P(\text{No}) \cdot P(\text{Sunny}|\text{No}) \cdot P(\text{Cool}|\text{No}) \cdot P(\text{High}|\text{No}) \cdot P(\text{True}|\text{No})$$
+    $$P(\text{No}|X) = \frac{5}{14} \cdot \frac{3}{5} \cdot \frac{1}{5} \cdot \frac{4}{5} \cdot \frac{3}{5} \approx 0.0206$$
+\end{itemize}
+
+\textbf{Bước 4: So sánh và dự đoán} \\
+Vì $P(\text{No}|\text{Sunny, Cool, High, True}) > P(\text{Yes}|\text{Sunny, Cool, High, True})$, nên dự đoán cho ID 15 là \textbf{``No''}.
+
+\subsection{Viết chương trình cho bài toán được minh họa}
+\begin{lstlisting}[language=Python, caption={Chương trình Python minh họa thuật toán Naïve Bayes}]
+def docFile(ten_file):
+    du_lieu = []
+    with open(ten_file, 'r') as file:
+        for line in file:
+            du_lieu.append(line.strip().split())
+    return du_lieu
+
+def tinhXacSuat(du_lieu_train, thuoc_tinh, gia_tri_thuoc_tinh, nhan):
+    count_attribute_and_class = 0
+    count_class = 0
+    for row in du_lieu_train:
+        if row[-1] == nhan:
+            count_class += 1
+            if row[thuoc_tinh] == gia_tri_thuoc_tinh:
+                count_attribute_and_class += 1
+    if count_class == 0:
+        return 0
+    return count_attribute_and_class / count_class
+
+def tinhXacSuatTienNghiem(du_lieu_train, nhan):
+    count_class = sum(1 for row in du_lieu_train if row[-1] == nhan)
+    return count_class / len(du_lieu_train)
+
+def du_doan(du_lieu_train, test_row):
+    class_probabilities = {}
+    for nhan in set(row[-1] for row in du_lieu_train):
+        prob_nhan = tinhXacSuatTienNghiem(du_lieu_train, nhan)
+        prob = prob_nhan
+        for i, gia_tri in enumerate(test_row):
+            prob *= tinhXacSuat(du_lieu_train, i, gia_tri, nhan)
+        class_probabilities[nhan] = prob
+    return max(class_probabilities, key=class_probabilities.get)
+
+# Thuc thi du doan
+train_data = docFile('trainData.txt')
+test_data = docFile('testData.txt')
+for test_row in test_data:
+    label = du_doan(train_data, test_row[:-1])
+    print(f"Test data: {test_row} -> Nhan du doan: {label}")
+\end{lstlisting}
+
+\subsection{Ưu/nhược điểm của thuật toán Naïve Bayes}
+\begin{itemize}
+    \item \textbf{Ưu điểm:}
+    \begin{itemize}
+        \item Hiệu quả với dữ liệu lớn và nhiều thuộc tính.
+        \item Đơn giản, dễ hiểu, dễ triển khai.
+        \item Thích hợp cho các bài toán phân loại văn bản như phân loại email hoặc phân tích cảm xúc.
+    \end{itemize}
+    \item \textbf{Nhược điểm:}
+    \begin{itemize}
+        \item Giả định độc lập giữa các thuộc tính thường không đúng trong thực tế, có thể làm giảm độ chính xác.
+        \item Không hiệu quả khi dữ liệu có giá trị bằng 0 trong các xác suất (giải quyết bằng Laplace Smoothing).
+    \end{itemize}
+\end{itemize}

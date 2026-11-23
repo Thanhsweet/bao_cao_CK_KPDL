@@ -1,0 +1,23 @@
+\section{LUẬT KẾT HỢP (ASSOCIATION RULES)}
+
+\subsection{Khái niệm}
+Tìm các mối quan hệ thú vị (tương quan, kết hợp) giữa các mục trong tập dữ liệu giao dịch lớn. Dạng luật: $X \rightarrow Y$ (Nếu có $X$ thì thường có $Y$).
+
+\subsection{Các miền ứng dụng}
+Phân tích giỏ hàng siêu thị, thiết kế catalog, hệ thống gợi ý, phân tích dữ liệu sinh học.
+
+\subsection{Thuật toán APRIORI}
+\begin{itemize}
+    \item \textbf{Ý tưởng:} Sử dụng tính chất Apriori: \textit{``Mọi tập con của một tập phổ biến cũng phải là tập phổ biến''}. Thuật toán tìm các tập phổ biến theo từng tầng ($k$-itemset) bằng cách sinh ứng viên và loại bỏ nhánh.
+    \item \textbf{Ví dụ minh họa:} Dữ liệu: $\{1, 2, 5\}, \{2, 4\}, \{2, 3\}, \{1, 2, 4\}, \dots$, $\text{minsup} = 2$. Thực hiện: Đếm tần suất 1-itemset $\rightarrow$ Lọc $\rightarrow$ Sinh 2-itemset ứng viên $\rightarrow$ Đếm $\rightarrow$ Lọc... cho đến khi không còn tập phổ biến.
+    \item \textbf{Ưu điểm:} Dễ cài đặt, dùng tính chất cắt tỉa để giảm không gian tìm kiếm.
+    \item \textbf{Nhược điểm:} Quét CSDL nhiều lần, sinh ra rất nhiều tập ứng viên.
+\end{itemize}
+
+\subsection{Thuật toán FP-GROWTH}
+\begin{itemize}
+    \item \textbf{Ý tưởng:} Tìm tập phổ biến mà không cần sinh ứng viên. Sử dụng cấu trúc cây FP-Tree để nén dữ liệu giao dịch và thuật toán chia để trị để khai phá.
+    \item \textbf{Ví dụ minh họa:} Xây dựng cây FP-Tree từ dữ liệu, sau đó khai phá các tập phổ biến từ cây.
+    \item \textbf{Ưu điểm:} Nhanh hơn Apriori (chỉ quét CSDL 2 lần), không sinh ứng viên, nén dữ liệu tốt.
+    \item \textbf{Nhược điểm:} Cấu trúc cây phức tạp, tốn bộ nhớ với dữ liệu lớn và không thưa.
+\end{itemize}

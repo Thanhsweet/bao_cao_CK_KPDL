@@ -1,0 +1,52 @@
+\section{THUẬT TOÁN K-MEANS}
+
+\subsection{Khái niệm / Ý tưởng}
+K-means là một thuật toán phân cụm không giám sát dùng để chia tập dữ liệu thành $k$ cụm sao cho: các điểm trong cùng cụm thì giống nhau (gần tâm cụm) và các cụm khác nhau thì khác biệt nhau (tâm cụm xa nhau).
+
+Thuật toán tìm ra $k$ ``tâm cụm'' (centroid) và lặp đi lặp lại 2 bước:
+\begin{enumerate}
+    \item Gán mỗi điểm vào cụm có tâm gần nhất (thường dùng khoảng cách Euclid).
+    \item Cập nhật tâm cụm bằng giá trị trung bình của các điểm trong cụm đó.
+\end{enumerate}
+
+\subsection{Quy trình thực hiện phân cụm}
+\begin{enumerate}
+    \item \textbf{Chọn số cụm $k$:} Dựa vào kinh nghiệm hoặc phương pháp Elbow, Silhouette...
+    \item \textbf{Khởi tạo $k$ tâm cụm ban đầu:} Chọn ngẫu nhiên $k$ điểm từ dữ liệu.
+    \item \textbf{Bước gán cụm (Assignment Step):} Với mỗi điểm $x_i$, tính khoảng cách đến từng tâm $\mu_j$ và gán $x_i$ vào cụm có tâm gần nhất.
+    \item \textbf{Bước cập nhật tâm (Update Step):} Với mỗi cụm $C_j$, cập nhật tâm:
+    $$\mu_j = \frac{1}{|C_j|} \sum_{x_i \in C_j} x_i$$
+    \item \textbf{Kiểm tra hội tụ:} Nếu tâm cụm không đổi hoặc đạt số vòng lặp tối đa thì dừng lại.
+\end{enumerate}
+
+\subsection{Mã giả (Pseudo-code K-means)}
+\begin{lstlisting}[caption={Mã giả thuật toán K-means}]
+Input: D (du lieu), k (so cum)
+Output: Cac cum C1...Ck va tam mu1...muk
+
+KMEANS(D, k):
+1. Chon ngau nhien k diem lam tam ban dau mu_1...mu_k
+2. Lap:
+       Gan cum: Voi moi diem x trong D, gan vao cum Cj co dist(x, mu_j) nho nhat
+       Cap nhat tam: mu_j = trung binh cac diem trong cum Cj.
+   Cho den khi: Cac tam khong doi hoac dat so vong lap toi da.
+3. Tra ve ket qua.
+\end{lstlisting}
+
+\subsection{Ưu / Nhược điểm của thuật toán K-means}
+\textbf{Ưu điểm:}
+\begin{itemize}
+    \item \textbf{Đơn giản, dễ cài đặt:} Thuật toán chỉ dùng khoảng cách và giá trị trung bình.
+    \item \textbf{Tốc độ nhanh, mở rộng tốt:} Độ phức tạp gần $O(k \times n \times t)$ (với $k$ là số cụm, $n$ số điểm, $t$ số vòng lặp).
+    \item \textbf{Áp dụng tốt cho dữ liệu lớn:} Hoạt động rất tốt nếu dữ liệu có dạng cụm cầu (spherical clusters).
+    \item \textbf{Kết quả trực quan:} Mỗi cụm có tâm giúp dễ diễn giải và làm tiền đề cho các bước phân tích sau.
+\end{itemize}
+
+\textbf{Nhược điểm:}
+\begin{itemize}
+    \item \textbf{Phải chọn $k$ trước:} Phải thử nhiều giá trị $k$ thông qua phương pháp Elbow hoặc Silhouette.
+    \item \textbf{Nhạy với khởi tạo:} Tâm ban đầu khác nhau dẫn đến kết quả khác nhau, dễ rơi vào cực tiểu cục bộ.
+    \item \textbf{Hạn chế về hình dạng cụm:} K-means phân cụm kém nếu cụm kéo dài hoặc có mật độ khác nhau.
+    \item \textbf{Nhạy với nhiễu và ngoại lai:} Điểm outlier có thể kéo tâm cụm đi xa.
+    \item \textbf{Dữ liệu số:} Chủ yếu dùng cho dữ liệu số, dữ liệu phân loại phải mã hóa phức tạp.
+\end{itemize}
