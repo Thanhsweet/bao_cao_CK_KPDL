@@ -1,0 +1,113 @@
+\documentclass[12pt,a4paper]{report}
+
+% --- CẤU HÌNH TIẾNG VIỆT & FONT ---
+\usepackage[utf8]{inputenc}
+\usepackage[T5]{fontenc}
+\usepackage[vietnamese]{babel}
+\usepackage{mathptmx}
+
+% --- CĂN LỀ & BỐ CỤC ---
+\usepackage[top=2.5cm, bottom=2.5cm, left=3cm, right=2cm]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{parskip}
+
+% --- TOÁN HỌC, BẢNG BIỂU & HÌNH ẢNH ---
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{float}
+
+% --- VẼ CÂY QUYẾT ĐỊNH (TIKZ) ---
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows, positioning}
+
+% --- CHÈN CODE PYTHON & MÃ GIẢ ---
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.96,0.96,0.96}
+
+\lstdefinestyle{pythonstyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=4,
+    frame=single
+}
+\lstset{style=pythonstyle}
+
+% --- ĐÁNH SỐ MỤC KHÔNG CÓ SỐ 0 Ở ĐẦU ---
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\thesubsection.\arabic{subsubsection}}
+
+% --- MỤC LỤC & LIÊN KẾT ---
+\usepackage[hidelinks]{hyperref}
+
+\begin{document}
+
+% ================= TRANG BÌA =================
+\input{bia.tex}
+
+% ================= MỤC LỤC =================
+\pagenumbering{roman}
+\tableofcontents
+\clearpage
+
+% ================= PHẦN I. LÝ THUYẾT =================
+\pagenumbering{arabic}
+\phantomsection\addcontentsline{toc}{part}{PHẦN I. LÝ THUYẾT}
+\chapter*{PHẦN I. LÝ THUYẾT}
+\setcounter{section}{0}
+
+\input{ly_thuyet/01_khai_pha_du_lieu.tex}
+\input{ly_thuyet/02_quy_trinh.tex}
+\input{ly_thuyet/03_kho_du_lieu.tex}
+\input{ly_thuyet/04_hoc_may.tex}
+\input{ly_thuyet/05_phan_lop.tex}
+\input{ly_thuyet/06_knn.tex}
+\input{ly_thuyet/07_naive_bayes.tex}
+\input{ly_thuyet/08_decision_tree.tex}
+\input{ly_thuyet/09_phan_cum.tex}
+\input{ly_thuyet/10_kmeans.tex}
+\input{ly_thuyet/11_luat_ket_hop.tex}
+\input{ly_thuyet/12_danh_gia_mo_hinh.tex}
+
+% ================= PHẦN II. THỰC HÀNH =================
+\clearpage
+\phantomsection\addcontentsline{toc}{part}{PHẦN II. THỰC HÀNH}
+\chapter*{PHẦN II. THỰC HÀNH}
+\setcounter{section}{0}
+
+\input{thuc_hanh/ex01_knn.tex}
+\input{thuc_hanh/ex02_knn.tex}
+\input{thuc_hanh/ex04_naive_bayes.tex}
+\input{thuc_hanh/ex05_naive_bayes.tex}
+\input{thuc_hanh/ex06_decision_tree.tex}
+\input{thuc_hanh/ex07_decision_tree.tex}
+\input{thuc_hanh/ex07_kmeans.tex}
+\input{thuc_hanh/ex08_decision_tree.tex}
+\input{thuc_hanh/ex08_association.tex}
+\input{thuc_hanh/ex09_association.tex}
+\input{thuc_hanh/ex10_association.tex}
+
+\end{document}
