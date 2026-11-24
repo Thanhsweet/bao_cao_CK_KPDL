@@ -27,38 +27,31 @@
 \begin{itemize}
     \item \textbf{True Positive (TP):} Số lượng các đối tượng thuộc lớp dương và được dự đoán đúng.
     \item \textbf{True Negative (TN):} Số lượng các đối tượng thuộc lớp âm và được dự đoán đúng.
-    \item \textbf{False Positive (FP):} Số lượng các đối tượng thuộc lớp âm nhưng lại bị dự đoán là dương (hay còn gọi là lỗi loại I).
-    \item \textbf{False Negative (FN):} Số lượng các đối tượng thuộc lớp dương nhưng lại bị dự đoán là âm (hay còn gọi là lỗi loại II).
+    \item \textbf{False Positive (FP):} Số lượng các đối tượng thuộc lớp âm nhưng lại bị dự đoán là dương.
+    \item \textbf{False Negative (FN):} Số lượng các đối tượng thuộc lớp dương nhưng lại bị dự đoán là âm.
 \end{itemize}
 
-\textbf{Cách thực hiện Confusion Matrix và ví dụ minh họa:}
-\begin{itemize}
-    \item \textbf{Bước 1:} Xác định các giá trị cần tính: True Positive (TP), True Negative (TN), False Positive (FP), False Negative (FN).
-    \item \textbf{Bước 2:} Tạo ma trận.
-    \item \textbf{Bước 3:} Tính toán các giá trị TP, TN, FP, FN thông qua việc so sánh từng giá trị dự đoán của mô hình với giá trị thực tế tương ứng.
-\end{itemize}
-
-\textbf{Ví dụ minh họa:} Giả sử có 10 mẫu dữ liệu với các dự đoán của mô hình và nhãn thực tế như sau:
+\textbf{Ví dụ minh họa:} Xét 10 mẫu với nhãn thực tế và kết quả dự đoán của mô hình như sau:
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|}
         \hline
         \textbf{Mẫu} & \textbf{Nhãn thực tế} & \textbf{Dự đoán của mô hình} \\
         \hline
-        1 & Dương & Dương \\ \hline
-        2 & Dương & Âm \\ \hline
-        3 & Âm & Âm \\ \hline
-        4 & Âm & Dương \\ \hline
-        5 & Dương & Dương \\ \hline
-        6 & Dương & Dương \\ \hline
-        7 & Âm & Âm \\ \hline
-        8 & Âm & Âm \\ \hline
-        9 & Dương & Âm \\ \hline
-        10 & Âm & Dương \\ \hline
+        1 & + & + \\ \hline
+        2 & + & - \\ \hline
+        3 & - & - \\ \hline
+        4 & - & + \\ \hline
+        5 & + & + \\ \hline
+        6 & + & + \\ \hline
+        7 & - & - \\ \hline
+        8 & - & - \\ \hline
+        9 & + & - \\ \hline
+        10 & - & + \\ \hline
     \end{tabular}
 \end{table}
 
-Từ bảng trên, ta tính được:
+Chọn lớp ``+'' là lớp dương. Đối chiếu nhãn thực tế với dự đoán, ta có:
 \begin{itemize}
     \item $\text{TP (True Positive): Mẫu 1, 5, 6} \Rightarrow \text{TP} = 3$.
     \item $\text{TN (True Negative): Mẫu 3, 7, 8} \Rightarrow \text{TN} = 3$.
@@ -66,19 +59,41 @@ Từ bảng trên, ta tính được:
     \item $\text{FN (False Negative): Mẫu 2, 9} \Rightarrow \text{FN} = 2$.
 \end{itemize}
 
-\textbf{Bước 4: Điền vào ma trận Confusion Matrix:}
+\textbf{Bước 4 -- Điền các giá trị vào ma trận nhầm lẫn:}
 \begin{table}[H]
     \centering
     \renewcommand{\arraystretch}{1.3}
     \begin{tabular}{|l|c|c|}
         \hline
-        & \textbf{Predicted Positive} & \textbf{Predicted Negative} \\
+        & \textbf{Dự đoán dương (+)} & \textbf{Dự đoán âm (-)} \\
         \hline
-        \textbf{Actual Positive} & 3 (TP) & 2 (FN) \\
+        \textbf{Thực tế dương (+)} & 3 (TP) & 2 (FN) \\
         \hline
-        \textbf{Actual Negative} & 2 (FP) & 3 (TN) \\
+        \textbf{Thực tế âm (-)} & 2 (FP) & 3 (TN) \\
         \hline
     \end{tabular}
 \end{table}
 
-\textbf{Bước 5: Sử dụng Confusion Matrix để tính các chỉ số đánh giá:} Từ ma trận, ta có thể tính các chỉ số như Accuracy (Độ chính xác), Precision (Độ chính xác tích cực), Recall (Độ nhạy) và F1-Score.
+\textbf{Bước 5 -- Tính các chỉ số đánh giá:}
+\begin{align*}
+\text{Accuracy}
+&= \frac{TP+TN}{TP+TN+FP+FN}
+= \frac{3+3}{3+3+2+2}
+= \frac{6}{10}
+= 60\%,\\
+\text{Precision}
+&= \frac{TP}{TP+FP}
+= \frac{3}{3+2}
+= \frac{3}{5}
+= 60\%,\\
+\text{Recall}
+&= \frac{TP}{TP+FN}
+= \frac{3}{3+2}
+= \frac{3}{5}
+= 60\%,\\
+\text{F1-Score}
+&= \frac{2 \cdot \text{Precision} \cdot \text{Recall}}
+{\text{Precision}+\text{Recall}}
+= \frac{2 \cdot 0.6 \cdot 0.6}{0.6+0.6}
+= 60\%.
+\end{align*}

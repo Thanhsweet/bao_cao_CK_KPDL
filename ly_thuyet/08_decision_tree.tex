@@ -1,43 +1,29 @@
 \section{THUẬT TOÁN DECISION TREE}
 
-\subsection{Khái niệm / Ý tưởng}
+\subsection{Khái niệm}
 Decision Tree (Cây quyết định) là mô hình phân lớp (hoặc hồi quy) dạng cây, trong đó:
 \begin{itemize}
-    \item \textbf{Nút trong (internal node):} tương ứng với một thuộc tính (feature) dùng để tách dữ liệu.
-    \item \textbf{Cạnh (nhánh):} tương ứng với giá trị của thuộc tính đó.
-    \item \textbf{Nút lá (leaf node):} tương ứng với nhãn lớp (class) được dự đoán.
+    \item Nút trong: tương ứng với một thuộc tính dùng để tách dữ liệu.
+    \item Cạnh: tương ứng với giá trị của thuộc tính đó.
+    \item Nút lá: tương ứng với nhãn lớp được dự đoán.
 \end{itemize}
 
-\textbf{Ý tưởng chính (ID3/C4.5):}
-\begin{enumerate}
-    \item Ở tập dữ liệu hiện tại, chọn thuộc tính ``tốt nhất'' để tách (dùng Information Gain hoặc Gain Ratio).
-    \item Tạo một nút cho thuộc tính đó, chia dữ liệu thành các nhánh theo từng giá trị.
-    \item Lặp lại đệ quy trên từng nhánh cho tới khi:
-    \begin{itemize}
-        \item Tất cả mẫu trong nhánh cùng một lớp $\rightarrow$ nút lá.
-        \item Hết thuộc tính để tách $\rightarrow$ lá gán theo lớp đa số.
-        \item Hoặc không còn đủ mẫu (theo điều kiện dừng).
-    \end{itemize}
-\end{enumerate}
+Ý tưởng chính của thuật toán Decision Tree: Chia để trị. Tại mỗi bước, chọn thuộc tính tốt nhất để tách dữ liệu thành các nhánh con sao cho các mẫu trong cùng một nhánh có cùng nhãn lớp càng nhiều càng tốt.
 
 \subsection{Quy trình phân lớp bằng thuật toán Decision Tree (ID3)}
 Quy trình chung:
-\begin{enumerate}
-    \item \textbf{Tiền xử lý dữ liệu:} Xử lý thiếu, nhiễu, chuẩn hóa, mã hóa thuộc tính rời rạc / số.
-    \item \textbf{Chia dữ liệu:} Training set / Test set (ví dụ: 70\% -- 30\%).
-    \item \textbf{Xây dựng cây (Training):}
-    \begin{itemize}
-        \item Tính Entropy của tập hiện tại:
-        $$\text{Entropy}(S) = -\sum_{i=1}^{c} p_i \log_2 p_i$$
-        \item Với mỗi thuộc tính: Tính Entropy điều kiện sau khi tách theo thuộc tính đó.
-        \item Tính Information Gain:
-        $$\text{Gain}(S,A) = \text{Entropy}(S) - \sum_{v \in \text{Values}(A)} \frac{\vert{}S_v\vert{}}{\vert{}S\vert{}} \text{Entropy}(S_v)$$
-        \item Chọn thuộc tính có Gain lớn nhất làm nút.
-        \item Chia tập dữ liệu theo thuộc tính đã chọn và đệ quy cho mỗi nhánh.
-    \end{itemize}
-    \item \textbf{Cắt tỉa cây (Pruning)} (nếu có): Giảm overfitting bằng cách cắt bớt các nhánh quá ``rườm rà'' dựa vào đánh giá trên validation set.
-    \item \textbf{Dự đoán (Prediction):} Với một mẫu mới, đi từ gốc đến lá. Tại mỗi nút: xem mẫu có giá trị gì ở thuộc tính tương ứng $\rightarrow$ đi theo nhánh tương ứng. Đến lá $\rightarrow$ nhãn lớp dự đoán.
+\begin{enumerate}[label=\textbf{Bước \arabic*:}]
+  \item Chuẩn bị và làm sạch dữ liệu.
+  \item Tại tập $S$ hiện thời, tính độ bất định (Entropy) và đánh giá các thuộc tính.
+  \item Chọn thuộc tính có Information Gain lớn nhất (ID3); với C4.5 sử dụng Gain Ratio.
+  \item Tách tập theo thuộc tính được chọn rồi gọi đệ quy cho từng nhánh.
+  \item Dừng khi các mẫu đồng nhất nhãn hoặc hết điều kiện chia; cắt tỉa nếu cần.
 \end{enumerate}
+\begin{align}
+H(S)&=-\sum_{c}p(c)\log_2p(c),\\
+\operatorname{Gain}(S,A)&=H(S)-\sum_{v\in\operatorname{Values}(A)}\frac{|S_v|}{|S|}H(S_v),\\
+\operatorname{Gini}(S)&=1-\sum_c p(c)^2.
+\end{align}
 
 \subsection{Mã giả}
 \begin{lstlisting}[caption={Mã giả thuật toán ID3}]
@@ -66,12 +52,12 @@ Output:
 8. Tra ve nut N
 \end{lstlisting}
 
-\subsection{Ví dụ minh họa – Tính tay chi tiết}
+\subsection{Ví dụ minh họa - Tính tay chi tiết}
 
 \subsubsection*{Mô tả bài toán}
-\textbf{Bài toán:} Dựa vào điều kiện thời tiết, ta quyết định ``Có nên chơi tennis hay không''. \\
-\textbf{Lớp (Label):} $\text{PlayTennis} \in \{\text{Yes}, \text{No}\}$. \\
-\textbf{Mục tiêu:} từ dữ liệu quá khứ, xây cây quyết định giúp dự đoán chơi / không chơi.
+Bài toán: Dựa vào điều kiện thời tiết, ta quyết định ``Có nên chơi tennis hay không''. \\
+Lớp: $\text{PlayTennis} \in \{\text{Yes}, \text{No}\}$. \\
+Mục tiêu: từ dữ liệu quá khứ, xây cây quyết định giúp dự đoán chơi / không chơi.
 
 \subsubsection*{Mô tả dữ liệu}
 Bảng dữ liệu (14 mẫu kinh điển - PlayTennis):
@@ -100,38 +86,38 @@ Bảng dữ liệu (14 mẫu kinh điển - PlayTennis):
 \end{table}
 
 \subsubsection*{Tính tay từng bước theo quy trình ID3}
-\textbf{Bước 1. Entropy toàn bộ tập $S$:} Tập $S$ có 9 Yes và 5 No:
+\textbf{Bước 1.} Entropy toàn bộ tập $S$: Tập $S$ có 9 Yes và 5 No:
 $$\text{Entropy}(S) = -\left(\frac{9}{14}\right)\log_2\left(\frac{9}{14}\right) - \left(\frac{5}{14}\right)\log_2\left(\frac{5}{14}\right) \approx 0.940$$
 
-\textbf{Bước 2. Tính Information Gain cho từng thuộc tính:} Ta xét 4 thuộc tính: Outlook, Temperature, Humidity, Wind.
+\textbf{Bước 2.} Tính Information Gain cho từng thuộc tính: Ta xét 4 thuộc tính: Outlook, Temperature, Humidity, Wind.
 \begin{itemize}
-    \item \textbf{2.1. Thuộc tính Outlook (Sunny, Overcast, Rain):}
+    \item 2.1. Thuộc tính Outlook (Sunny, Overcast, Rain):
     \begin{itemize}
         \item Sunny: (Mẫu 1, 2, 8, 9, 11) $\rightarrow$ 2 Yes, 3 No. $\text{Entropy}(\text{Sunny}) \approx 0.971$
         \item Overcast: (Mẫu 3, 7, 12, 13) $\rightarrow$ 4 Yes, 0 No. $\text{Entropy}(\text{Overcast}) = 0$
         \item Rain: (Mẫu 4, 5, 6, 10, 14) $\rightarrow$ 3 Yes, 2 No. $\text{Entropy}(\text{Rain}) \approx 0.971$
         $$\text{Gain}(S, \text{Outlook}) = 0.940 - \left[\frac{5}{14}(0.971) + \frac{4}{14}(0) + \frac{5}{14}(0.971)\right] \approx 0.246$$
     \end{itemize}
-    \item \textbf{2.2. Thuộc tính Temperature:} $\text{Gain}(S, \text{Temperature}) \approx 0.029$
-    \item \textbf{2.3. Thuộc tính Humidity:} $\text{Gain}(S, \text{Humidity}) \approx 0.152$
-    \item \textbf{2.4. Thuộc tính Wind:} $\text{Gain}(S, \text{Wind}) \approx 0.048$
+    \item 2.2. Thuộc tính Temperature: $\text{Gain}(S, \text{Temperature}) \approx 0.029$
+    \item 2.3. Thuộc tính Humidity: $\text{Gain}(S, \text{Humidity}) \approx 0.152$
+    \item 2.4. Thuộc tính Wind: $\text{Gain}(S, \text{Wind}) \approx 0.048$
 \end{itemize}
 \textbf{Kết luận:} Outlook có Information Gain lớn nhất $\rightarrow$ chọn Outlook làm nút gốc.
 
 \subsubsection*{Xây tiếp các nhánh con}
 \begin{itemize}
-    \item \textbf{Nhánh 1: $\text{Outlook} = \text{Overcast}$:} Những mẫu có $\text{Outlook} = \text{Overcast}$ đều $\text{PlayTennis} = \text{Yes}$ (4 mẫu). $\text{Entropy} = 0 \rightarrow$ nút lá: \textbf{Yes}.
-    \item \textbf{Nhánh 2: $\text{Outlook} = \text{Sunny}$:} Tập con Sunny (Mẫu 1, 2, 8, 9, 11) có 2 Yes, 3 No. $\text{Entropy} \approx 0.971$. Tính Gain cho các thuộc tính còn lại:
+    \item Nhánh 1: $\text{Outlook} = \text{Overcast}$: Những mẫu có $\text{Outlook} = \text{Overcast}$ đều $\text{PlayTennis} = \text{Yes}$ (4 mẫu). $\text{Entropy} = 0 \rightarrow$ nút lá: Yes.
+    \item Nhánh 2: $\text{Outlook} = \text{Sunny}$: Tập con Sunny (Mẫu 1, 2, 8, 9, 11) có 2 Yes, 3 No. $\text{Entropy} \approx 0.971$. Tính Gain cho các thuộc tính còn lại:
     \begin{itemize}
         \item $\text{Gain}(\text{Sunny}, \text{Humidity}) \approx 0.971$ (Lớn nhất) $\rightarrow$ Chọn Humidity làm nút con.
-        \item $\text{Humidity} = \text{High}$: (Mẫu 1, 2, 8) $\rightarrow$ Tất cả No $\rightarrow$ Lá: \textbf{No}.
-        \item $\text{Humidity} = \text{Normal}$: (Mẫu 9, 11) $\rightarrow$ Tất cả Yes $\rightarrow$ Lá: \textbf{Yes}.
+        \item $\text{Humidity} = \text{High}$: (Mẫu 1, 2, 8) $\rightarrow$ Tất cả No $\rightarrow$ Lá: No.
+        \item $\text{Humidity} = \text{Normal}$: (Mẫu 9, 11) $\rightarrow$ Tất cả Yes $\rightarrow$ Lá: Yes.
     \end{itemize}
-    \item \textbf{Nhánh 3: $\text{Outlook} = \text{Rain}$:} Tập con Rain (Mẫu 4, 5, 6, 10, 14) có 3 Yes, 2 No. $\text{Entropy} \approx 0.971$. Tính Gain:
+    \item Nhánh 3: $\text{Outlook} = \text{Rain}$: Tập con Rain (Mẫu 4, 5, 6, 10, 14) có 3 Yes, 2 No. $\text{Entropy} \approx 0.971$. Tính Gain:
     \begin{itemize}
         \item $\text{Gain}(\text{Rain}, \text{Wind}) \approx 0.971$ (Lớn nhất) $\rightarrow$ Chọn Wind làm nút con.
-        \item $\text{Wind} = \text{Weak}$: (Mẫu 4, 5, 10) $\rightarrow$ Tất cả Yes $\rightarrow$ Lá: \textbf{Yes}.
-        \item $\text{Wind} = \text{Strong}$: (Mẫu 6, 14) $\rightarrow$ Tất cả No $\rightarrow$ Lá: \textbf{No}.
+        \item $\text{Wind} = \text{Weak}$: (Mẫu 4, 5, 10) $\rightarrow$ Tất cả Yes $\rightarrow$ Lá: Yes.
+        \item $\text{Wind} = \text{Strong}$: (Mẫu 6, 14) $\rightarrow$ Tất cả No $\rightarrow$ Lá: No.
     \end{itemize}
 \end{itemize}
 
@@ -181,106 +167,17 @@ $$\text{Entropy}(S) = -\left(\frac{9}{14}\right)\log_2\left(\frac{9}{14}\right) 
     \item Trên dữ liệu huấn luyện, cây này phân loại chính xác toàn bộ 14 mẫu.
 \end{itemize}
 
-\subsection{Chương trình minh họa Decision Tree (ID3)}
-Dưới đây là mã nguồn Python đầy đủ để xây dựng cây quyết định ID3 cho bài toán Play Tennis:
-
-\begin{lstlisting}[language=Python, caption={Source code ID3 cho ví dụ Play Tennis}]
-import math
-from collections import Counter, defaultdict
-
-# 1. DU LIEU PLAY TENNIS
-# Moi record la (Outlook, Temperature, Humidity, Wind, Play)
-data = [
-    ("Sunny", "Hot", "High", "Weak", "No"),
-    ("Sunny", "Hot", "High", "Strong", "No"),
-    ("Overcast", "Hot", "High", "Weak", "Yes"),
-    ("Rain", "Mild", "High", "Weak", "Yes"),
-    ("Rain", "Cool", "Normal", "Weak", "Yes"),
-    ("Rain", "Cool", "Normal", "Strong", "No"),
-    ("Overcast", "Cool", "Normal", "Strong", "Yes"),
-    ("Sunny", "Mild", "High", "Weak", "No"),
-    ("Sunny", "Cool", "Normal", "Weak", "Yes"),
-    ("Rain", "Mild", "Normal", "Weak", "Yes"),
-    ("Sunny", "Mild", "Normal", "Strong", "Yes"),
-    ("Overcast", "Mild", "High", "Strong", "Yes"),
-    ("Overcast", "Hot", "Normal", "Weak", "Yes"),
-    ("Rain", "Mild", "High", "Strong", "No"),
-]
-
-attribute_names = ["Outlook", "Temperature", "Humidity", "Wind"]
-
-# 2. HAM TINH ENTROPY & GAIN
-def entropy(rows):
-    total = len(rows)
-    label_counts = Counter(r[-1] for r in rows)
-    return -sum((c / total) * math.log2(c / total) for c in label_counts.values())
-
-def info_gain(rows, col_index):
-    base_entropy = entropy(rows)
-    total = len(rows)
-    groups = defaultdict(list)
-    for r in rows:
-        groups[r[col_index]].append(r)
-    cond_entropy = 0.0
-    for subset in groups.values():
-        cond_entropy += (len(subset) / total) * entropy(subset)
-    return base_entropy - cond_entropy, groups
-
-# 3. XAY DUNG CAY ID3 (DE QUY)
-def majority_label(rows):
-    counts = Counter(r[-1] for r in rows)
-    return counts.most_common(1)[0][0]
-
-def id3(rows, attributes):
-    labels = [r[-1] for r in rows]
-    if len(set(labels)) == 1:
-        return labels[0]
-    if not attributes:
-        return majority_label(rows)
-    
-    best_gain = -1
-    best_attr = None
-    best_groups = None
-    for a in attributes:
-        g, groups = info_gain(rows, a)
-        if g > best_gain:
-            best_gain, best_attr, best_groups = g, a, groups
-            
-    if best_gain <= 0:
-        return majority_label(rows)
-        
-    tree = {"attribute": best_attr, "children": {}}
-    remaining_attrs = [a for a in attributes if a != best_attr]
-    for val, subset in best_groups.items():
-        tree["children"][val] = id3(subset, remaining_attrs)
-    return tree
-
-# 4. PREDICT & INFERENCE
-def predict(tree, sample):
-    if isinstance(tree, str):
-        return tree
-    attr_index = tree["attribute"]
-    attr_value = sample[attr_index]
-    if attr_value not in tree["children"]:
-        return None
-    return predict(tree["children"][attr_value], sample)
-
-if __name__ == "__main__":
-    attrs = list(range(len(attribute_names)))
-    tree = id3(data, attrs)
-    print("Cay quyet dinh (dang dict):", tree)
-    new_sample = ("Sunny", "Cool", "High", "Strong")
-    print(f"Du doan cho mau {new_sample} -> {predict(tree, new_sample)}")
-\end{lstlisting}
+\subsection{Chương trình minh họa Decision Tree}
+\lstinputlisting[language=Python,caption={Chương trình Python minh họa thuật toán Decision Tree}]{source_code/decision_tree_85.py}
 
 \subsection{Ưu / Nhược điểm của Decision Tree}
 \textbf{Ưu điểm:}
 \begin{itemize}
-    \item \textbf{Trực quan, dễ hiểu:} Dạng cây có thể dễ dàng chuyển thành các luật IF-THEN.
-    \item \textbf{Không cần giả định phân phối dữ liệu:} Khác với một số mô hình thống kê truyền thống.
-    \item \textbf{Xử lý đa dạng loại dữ liệu:} Xử lý cả thuộc tính rời rạc lẫn số (C4.5 tìm ngưỡng tách).
-    \item \textbf{Tốc độ nhanh:} Huấn luyện và dự đoán khá nhanh với độ phức tạp $O(n \cdot m \log m)$.
-    \item \textbf{Tự động chọn lọc:} Tự động xác định thuộc tính quan trọng qua Information Gain.
+    \item Trực quan, dễ hiểu.
+    \item Không cần giả định phân phối dữ liệu.
+    \item Xử lý đa dạng loại dữ liệu.
+    \item Tốc độ nhanh.
+    \item Tự động chọn lọc thuộc tính quan trọng.
 \end{itemize}
 
 \textbf{Nhược điểm:}

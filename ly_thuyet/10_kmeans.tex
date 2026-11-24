@@ -11,13 +11,15 @@ Thuật toán tìm ra $k$ ``tâm cụm'' (centroid) và lặp đi lặp lại 2 
 
 \subsection{Quy trình thực hiện phân cụm}
 \begin{enumerate}
-    \item \textbf{Chọn số cụm $k$:} Dựa vào kinh nghiệm hoặc phương pháp Elbow, Silhouette...
-    \item \textbf{Khởi tạo $k$ tâm cụm ban đầu:} Chọn ngẫu nhiên $k$ điểm từ dữ liệu.
-    \item \textbf{Bước gán cụm (Assignment Step):} Với mỗi điểm $x_i$, tính khoảng cách đến từng tâm $\mu_j$ và gán $x_i$ vào cụm có tâm gần nhất.
-    \item \textbf{Bước cập nhật tâm (Update Step):} Với mỗi cụm $C_j$, cập nhật tâm:
+    \item Chọn số cụm $k$: Dựa vào kinh nghiệm hoặc phương pháp Elbow, Silhouette...
+    \item Khởi tạo $k$ tâm cụm ban đầu: Chọn ngẫu nhiên $k$ điểm từ dữ liệu.
+    \item Bước gán cụm: Với mỗi điểm $x_i$, tính khoảng cách đến từng tâm $\mu_j$ và gán $x_i$ vào cụm có tâm gần nhất.
+    \item Bước cập nhật tâm: Với mỗi cụm $C_j$, cập nhật tâm:
     $$\mu_j = \frac{1}{|C_j|} \sum_{x_i \in C_j} x_i$$
-    \item \textbf{Kiểm tra hội tụ:} Nếu tâm cụm không đổi hoặc đạt số vòng lặp tối đa thì dừng lại.
+    \item Kiểm tra hội tụ: Nếu tâm cụm không đổi hoặc đạt số vòng lặp tối đa thì dừng lại.
 \end{enumerate}
+
+
 
 \subsection{Mã giả (Pseudo-code K-means)}
 \begin{lstlisting}[caption={Mã giả thuật toán K-means}]
@@ -33,20 +35,106 @@ KMEANS(D, k):
 3. Tra ve ket qua.
 \end{lstlisting}
 
+\subsection{Bài toán minh họa}
+\subsubsection*{Mô tả bài toán}
+Sử dụng thuật toán K-means với khoảng cách Euclid để chia 8 điểm dữ liệu thành $k=3$ cụm. Các điểm thuộc cùng cụm cần nằm gần nhau; tâm mỗi cụm được cập nhật bằng trung bình tọa độ các điểm trong cụm đó.
+
+\subsubsection*{Mô tả dữ liệu}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{Điểm} & \textbf{Tọa độ} & \textbf{Điểm} & \textbf{Tọa độ} \\
+        \hline
+        $A_1$ & $(2,10)$ & $A_5$ & $(7,5)$ \\ \hline
+        $A_2$ & $(2,5)$ & $A_6$ & $(6,4)$ \\ \hline
+        $A_3$ & $(8,4)$ & $A_7$ & $(1,2)$ \\ \hline
+        $A_4$ & $(5,8)$ & $A_8$ & $(4,9)$ \\ \hline
+    \end{tabular}
+    \caption{Tập dữ liệu gồm 8 điểm cần phân cụm}
+    \label{tab:kmeans-data}
+\end{table}
+
+Chọn các tâm ban đầu là $C_1=A_1=(2,10)$, $C_2=A_2=(2,5)$ và $C_3=A_3=(8,4)$. Khoảng cách từ điểm $A_i=(x_i,y_i)$ đến tâm $C_j=(u_j,v_j)$ được tính theo công thức:
+\[
+d(A_i,C_j)=\sqrt{(x_i-u_j)^2+(y_i-v_j)^2}.
+\]
+
+\subsubsection*{Thực hiện thuật toán}
+\textbf{Lần lặp 1 -- Gán điểm vào cụm:} Tính khoảng cách từ mỗi điểm đến ba tâm ban đầu và gán điểm vào cụm có khoảng cách nhỏ nhất.
+\begin{table}[H]
+    \centering
+    \small
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \textbf{Điểm} & \textbf{$d(C_1)$} & \textbf{$d(C_2)$} & \textbf{$d(C_3)$} & \textbf{Cụm} \\
+        \hline
+        $A_1(2,10)$ & 0.000 & 5.000 & 8.485 & $C_1$ \\ \hline
+        $A_2(2,5)$ & 5.000 & 0.000 & 6.083 & $C_2$ \\ \hline
+        $A_3(8,4)$ & 8.485 & 6.083 & 0.000 & $C_3$ \\ \hline
+        $A_4(5,8)$ & 3.606 & 4.243 & 5.000 & $C_1$ \\ \hline
+        $A_5(7,5)$ & 7.071 & 5.000 & 1.414 & $C_3$ \\ \hline
+        $A_6(6,4)$ & 7.211 & 4.123 & 2.000 & $C_3$ \\ \hline
+        $A_7(1,2)$ & 8.062 & 3.162 & 7.280 & $C_2$ \\ \hline
+        $A_8(4,9)$ & 2.236 & 4.472 & 6.403 & $C_1$ \\ \hline
+    \end{tabular}
+    \caption{Khoảng cách và kết quả gán cụm ở lần lặp 1}
+    \label{tab:kmeans-iteration-1}
+\end{table}
+
+Sau khi gán, ta có $C_1=\{A_1,A_4,A_8\}$, $C_2=\{A_2,A_7\}$ và $C_3=\{A_3,A_5,A_6\}$. Cập nhật tâm bằng trung bình tọa độ:
+\begin{align*}
+C_1&=\left(\frac{2+5+4}{3},\frac{10+8+9}{3}\right)\approx(3.67,9),\\
+C_2&=\left(\frac{2+1}{2},\frac{5+2}{2}\right)=(1.5,3.5),\\
+C_3&=\left(\frac{8+7+6}{3},\frac{4+5+4}{3}\right)\approx(7,4.33).
+\end{align*}
+
+\textbf{Lần lặp 2 -- Kiểm tra hội tụ:} Tính lại khoảng cách từ các điểm đến các tâm mới.
+\begin{table}[H]
+    \centering
+    \small
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \textbf{Điểm} & \textbf{$d(C_1)$} & \textbf{$d(C_2)$} & \textbf{$d(C_3)$} & \textbf{Cụm} \\
+        \hline
+        $A_1(2,10)$ & 1.94 & 6.52 & 7.56 & $C_1$ \\ \hline
+        $A_2(2,5)$ & 4.33 & 1.58 & 5.04 & $C_2$ \\ \hline
+        $A_3(8,4)$ & 6.61 & 6.52 & 1.05 & $C_3$ \\ \hline
+        $A_4(5,8)$ & 1.67 & 5.70 & 4.18 & $C_1$ \\ \hline
+        $A_5(7,5)$ & 5.21 & 5.70 & 0.67 & $C_3$ \\ \hline
+        $A_6(6,4)$ & 5.52 & 4.53 & 1.05 & $C_3$ \\ \hline
+        $A_7(1,2)$ & 7.49 & 1.58 & 6.44 & $C_2$ \\ \hline
+        $A_8(4,9)$ & 0.33 & 6.04 & 5.55 & $C_1$ \\ \hline
+    \end{tabular}
+    \caption{Khoảng cách và kết quả gán cụm ở lần lặp 2}
+    \label{tab:kmeans-iteration-2}
+\end{table}
+
+Các điểm vẫn thuộc cùng cụm như lần lặp 1 nên các tâm cụm không đổi. Thuật toán hội tụ.
+
+\subsubsection*{Kết quả}
+\begin{itemize}
+    \item \textbf{Cụm 1:} $A_1(2,10), A_4(5,8), A_8(4,9)$; tâm $C_1\approx(3.67,9)$.
+    \item \textbf{Cụm 2:} $A_2(2,5), A_7(1,2)$; tâm $C_2=(1.5,3.5)$.
+    \item \textbf{Cụm 3:} $A_3(8,4), A_5(7,5), A_6(6,4)$; tâm $C_3\approx(7,4.33)$.
+\end{itemize}
+
+\subsection{Chương trình minh họa K-means}
+\lstinputlisting[language=Python,caption={Chương trình Python minh họa thuật toán K-means}]{source_code/kmeans_105.py}
+
 \subsection{Ưu / Nhược điểm của thuật toán K-means}
 \textbf{Ưu điểm:}
 \begin{itemize}
-    \item \textbf{Đơn giản, dễ cài đặt:} Thuật toán chỉ dùng khoảng cách và giá trị trung bình.
-    \item \textbf{Tốc độ nhanh, mở rộng tốt:} Độ phức tạp gần $O(k \times n \times t)$ (với $k$ là số cụm, $n$ số điểm, $t$ số vòng lặp).
-    \item \textbf{Áp dụng tốt cho dữ liệu lớn:} Hoạt động rất tốt nếu dữ liệu có dạng cụm cầu (spherical clusters).
-    \item \textbf{Kết quả trực quan:} Mỗi cụm có tâm giúp dễ diễn giải và làm tiền đề cho các bước phân tích sau.
+    \item Đơn giản, dễ cài đặt.
+    \item Tốc độ nhanh, mở rộng tốt.
+    \item Áp dụng tốt cho dữ liệu lớn.
+    \item Kết quả trực quan.
 \end{itemize}
 
 \textbf{Nhược điểm:}
 \begin{itemize}
-    \item \textbf{Phải chọn $k$ trước:} Phải thử nhiều giá trị $k$ thông qua phương pháp Elbow hoặc Silhouette.
-    \item \textbf{Nhạy với khởi tạo:} Tâm ban đầu khác nhau dẫn đến kết quả khác nhau, dễ rơi vào cực tiểu cục bộ.
-    \item \textbf{Hạn chế về hình dạng cụm:} K-means phân cụm kém nếu cụm kéo dài hoặc có mật độ khác nhau.
-    \item \textbf{Nhạy với nhiễu và ngoại lai:} Điểm outlier có thể kéo tâm cụm đi xa.
-    \item \textbf{Dữ liệu số:} Chủ yếu dùng cho dữ liệu số, dữ liệu phân loại phải mã hóa phức tạp.
+    \item Phải chọn $k$ trước.
+    \item Hạn chế về hình dạng cụm.
+    \item Nhạy với nhiễu và ngoại lai.
+    \item Chủ yếu dùng cho dữ liệu số.
 \end{itemize}
